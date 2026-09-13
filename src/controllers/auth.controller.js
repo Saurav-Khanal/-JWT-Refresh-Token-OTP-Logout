@@ -32,6 +32,7 @@ export async function register(req,res){
         user:{
             username:user.username,
             email:user.email,
+            email:user.email
         },
         token
     })
