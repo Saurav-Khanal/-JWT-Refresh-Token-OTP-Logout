@@ -22,11 +22,27 @@ export async function register(req,res){
         email,
         password:hashedPassword
     })
-    const token=jwt.sign({
+    const accessToken=jwt.sign({
         id:user._id
     },config.JWT_SECRET,{
-        expiresIn:"1d"
+            
+
     })
+    const refreshToken=jwt.sign({
+        id:user._id
+    },config.JWT_SECRET,
+    {
+        expiresIn:"7d"
+    }
+)
+
+    res.cookie("refreshToken",refreshToken,{
+        httpOnly:true,
+        secure:true,
+        sameSite:"strict",
+        maxAge:7 * 24 * 60 * 60 * 1000//7 DAYS
+    })
+
     res.status(201).json({
         message:"user registeres succesfully",
         user:{
@@ -34,7 +50,7 @@ export async function register(req,res){
             email:user.email,
             email:user.email
         },
-        token
+        accessToken,
     })
 }
 
@@ -54,4 +70,8 @@ export async function getMe(req,res) {
             email:user.email,
         }
     })
+}
+
+export async function name(params) {
+    
 }
